@@ -277,6 +277,34 @@ all other bindings via `:include` (see the man page for details).
 	# Add a binding only for the keychron
 	1 = macro(C-1)
 
+# Chords vs Layers
+
+Bindings under a modifier can use either *chords* or *layers*:
+
+```
+[main] leftalt+left = home       # chord
+[alt]  left = home               # layer
+```
+
+Both produce the same result, but they differ in intent:
+
+**Use layers when the modifier is a *mode*:**
+All keys are meaningful under the modifier. Unmapped keys passthrough
+automatically with the modifier applied. Composite layers like
+`[control+meta]` work naturally.
+
+**Use chords for one-off overrides:**
+A single chord under a modifier whose normal behaviour you want to keep.
+Chords take priority over layer bindings for the same key combo.
+
+|                          | Chords | Layers |
+| ------------------------ | ------ | ------ |
+| Multiple bindings        | One chord per line | All under one `[layer]` |
+| Unmapped keys            | Passthrough with modifier | Passthrough with modifier |
+| Composite combos         | `leftcontrol+leftalt+key` | `[control+alt] key = ...` |
+| Natural for small sets   | ✓ |   |
+| Natural for full remaps  |   | ✓ |
+
 # Recommended config
 
 Many users will probably not be interested in taking full advantage of keyd.
