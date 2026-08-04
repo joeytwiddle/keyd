@@ -244,6 +244,39 @@ be more familiar with, while keeping the rest intact.
 	r = C-r
 	z = C-z
 
+# Example 3: Device specific configuration
+
+Global config with a keyboard specific override that inherits
+all other bindings via `:include` (see the man page for details).
+
+`/etc/keyd/default.conf`:
+
+	[ids]
+	*
+
+	[main]
+	leftalt+left = home
+	leftalt+right = end
+
+	[meta]
+	h = left
+	l = right
+
+`/etc/keyd/keychron.conf`:
+
+	:include default.conf
+
+	[ids]
+	3434:3434
+
+	[main]
+	# Override only this key, everything else falls back to default.conf
+	leftalt+space = macro(C-m)
+
+	[meta]
+	# Add a binding only for the keychron
+	1 = macro(C-1)
+
 # Recommended config
 
 Many users will probably not be interested in taking full advantage of keyd.
