@@ -574,10 +574,6 @@ E.g.
 	[ids]
 	*
 
-	[main]
-	leftalt+left = home
-	leftalt+right = end
-
 	[alt]
 	left = home
 	right = end
@@ -588,11 +584,10 @@ E.g.
 	[ids]
 	specific-device-id
 
-	[main]
-	# Override only this binding, everything else falls back to default.conf
-	leftalt+x = macro(C-n)
-
 	[alt]
+	# Override only this binding, everything else falls back to default.conf
+	x = macro(C-n)
+
 	# Add a new binding that only applies to the keychron
 	1 = macro(C-1)
 ```

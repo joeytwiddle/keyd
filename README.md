@@ -254,9 +254,9 @@ all other bindings via `:include` (see the man page for details).
 	[ids]
 	*
 
-	[main]
-	leftalt+left = home
-	leftalt+right = end
+	[alt]
+	left = home
+	right = end
 
 	[meta]
 	h = left
@@ -269,9 +269,9 @@ all other bindings via `:include` (see the man page for details).
 	[ids]
 	3434:3434
 
-	[main]
+	[alt]
 	# Override only this key, everything else falls back to default.conf
-	leftalt+space = macro(C-m)
+	space = macro(C-m)
 
 	[meta]
 	# Add a binding only for the keychron
