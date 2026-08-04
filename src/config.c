@@ -116,18 +116,9 @@ static struct {
 	{ "swap2", 	"swapm",	OP_SWAPM,			{ ARG_LAYER, ARG_MACRO } },
 };
 
-static int exists_and_is_relative(const char *parent_dir, const char *path)
+static int file_exists(const char *path)
 {
-	char p1[PATH_MAX];
-	char p2[PATH_MAX];
-
-	if (!realpath(parent_dir, p1))
-		return 0;
-
-	if (!realpath(path, p2))
-		return 0;
-
-	return !strncmp(p2, p1, strlen(p1));
+	return access(path, F_OK) == 0;
 }
 
 static int resolve_include_path(const char *config_path, const char *include_path, char *resolved_path)
@@ -147,11 +138,11 @@ static int resolve_include_path(const char *config_path, const char *include_pat
 	resolved_path[len] = '/';
 	strcpy(resolved_path + len + 1, include_path);
 
-	if (exists_and_is_relative(config_dir, resolved_path))
+	if (file_exists(resolved_path))
 		return 0;
 
 	snprintf(resolved_path, PATH_MAX, DATA_DIR"/%s", include_path);
-	return !exists_and_is_relative(DATA_DIR, resolved_path);
+	return file_exists(resolved_path) ? 0 : -1;
 }
 
 static void append_line(char *buf, size_t buf_sz, size_t *off, const char *line)
