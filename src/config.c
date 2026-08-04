@@ -196,6 +196,9 @@ static char *read_config_file(const char *path, struct srcmap *srcmap)
 	const char include_prefix[] = "include ";
 	const size_t include_prefix_len = sizeof(include_prefix) - 1;
 
+	const char inherit_prefix[] = ":include ";
+	const size_t inherit_prefix_len = sizeof(inherit_prefix) - 1;
+
 	size_t off = 0;
 	static char output[MAX_FILE_SIZE];
 
@@ -212,7 +215,52 @@ static char *read_config_file(const char *path, struct srcmap *srcmap)
 		current_line = config_line_num;
 		current_file = path;
 
-		if (!strncmp(line, include_prefix, include_prefix_len)) {
+		if (!strncmp(line, inherit_prefix, inherit_prefix_len)) {
+			char *include_path;
+
+			assert(srcmap->num_paths < ARRAY_SIZE(srcmap->paths));
+
+			include_path = srcmap->paths[srcmap->num_paths];
+			if (!resolve_include_path(path, line + inherit_prefix_len, include_path)) {
+				FILE *fh2;
+				size_t include_line_num = 0;
+				int in_ids_section = 0;
+
+				if (!(fh2 = fopen(include_path, "r"))) {
+					config_warn("failed to open %s", include_path);
+					continue;
+				}
+
+				srcmap->num_paths++;
+				while ((line = read_line(fh2))) {
+					const char *trimmed = line;
+					while (isspace(*trimmed))
+						trimmed++;
+
+					if (trimmed[0] == '[' && !strncmp(trimmed + 1, "ids]", 4))
+						in_ids_section = 1;
+					else if (trimmed[0] == '[')
+						in_ids_section = 0;
+
+					if (in_ids_section) {
+						include_line_num++;
+						continue;
+					}
+
+					append_line(output, sizeof output, &off, line);
+
+					assert(output_line_num < ARRAY_SIZE(srcmap->entries));
+					srcmap->entries[output_line_num].path = include_path;
+					srcmap->entries[output_line_num].line = include_line_num++;
+
+					output_line_num++;
+				}
+
+				fclose(fh2);
+			} else {
+				config_warn("failed to resolve include path %s", line + inherit_prefix_len);
+			}
+		} else if (!strncmp(line, include_prefix, include_prefix_len)) {
 			char *include_path;
 
 			assert(srcmap->num_paths < ARRAY_SIZE(srcmap->paths));
