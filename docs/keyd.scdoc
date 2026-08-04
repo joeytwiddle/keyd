@@ -548,6 +548,56 @@ Limitations:
 	- Included files should not include other files (inclusion is non-recursive).
 	- Included files should not end in .conf.
 
+## Config Inheritance
+
+The _:include_ directive allows a specific keyboard config to inherit all
+bindings from a base config (typically one with a wildcard _\*_ id), without
+inheriting the base config's _[ids]_ match rules. This is useful when you want
+a specific device to use the same bindings as the global config, with the
+ability to override individual keys.
+
+Unlike *include*, the *:include* directive:
+
+	- Can (and typically should) appear *before* the _[ids]_ section
+	- Strips the _[ids]_ section from the included file, inheriting only
+	  layers, macros, aliases, etc.
+	- Allows the inheriting config to define its own _[ids]_ section
+
+Bindings from the inheriting config take priority over bindings from the
+included config (they are processed last). Any binding not defined in the
+inheriting config falls back to the included config.
+
+E.g.
+
+```
+/etc/keyd/default.conf:
+	[ids]
+	*
+
+	[main]
+	leftalt+left = home
+	leftalt+right = end
+
+	[alt]
+	left = home
+	right = end
+
+/etc/keyd/keychron.conf:
+	:include default.conf
+
+	[ids]
+	specific-device-id
+
+	[main]
+	# Override only this binding, everything else falls back to default.conf
+	leftalt+x = macro(C-n)
+
+	[alt]
+	# Add a new binding that only applies to the keychron
+	1 = macro(C-1)
+```
+
+
 
 # GLOBALS
 
