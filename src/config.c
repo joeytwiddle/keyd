@@ -225,6 +225,7 @@ static char *read_config_file(const char *path, struct srcmap *srcmap)
 				FILE *fh2;
 				size_t include_line_num = 0;
 				int in_ids_section = 0;
+				int seen_section = 0;
 
 				if (!(fh2 = fopen(include_path, "r"))) {
 					config_warn("failed to open %s", include_path);
@@ -239,10 +240,12 @@ static char *read_config_file(const char *path, struct srcmap *srcmap)
 
 					if (trimmed[0] == '[' && !strncmp(trimmed + 1, "ids]", 4))
 						in_ids_section = 1;
-					else if (trimmed[0] == '[')
+					else if (trimmed[0] == '[') {
 						in_ids_section = 0;
+						seen_section = 1;
+					}
 
-					if (in_ids_section) {
+					if (in_ids_section || !seen_section) {
 						include_line_num++;
 						continue;
 					}
