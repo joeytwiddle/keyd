@@ -550,13 +550,13 @@ Limitations:
 
 ## Config Inheritance
 
-The _:include_ directive allows a specific keyboard config to inherit all
+The _@include_ directive allows a specific keyboard config to inherit all
 bindings from a base config (typically one with a wildcard _\*_ id), without
 inheriting the base config's _[ids]_ match rules. This is useful when you want
 a specific device to use the same bindings as the global config, with the
 ability to override individual keys.
 
-Unlike *include*, the *:include* directive:
+Unlike *include*, the *@include* directive:
 
 	- Can (and typically should) appear *before* the _[ids]_ section
 	- Strips the _[ids]_ section from the included file, inheriting only
@@ -579,7 +579,7 @@ E.g.
 	right = end
 
 /etc/keyd/keychron.conf:
-	:include default.conf
+	@include default.conf
 
 	[ids]
 	specific-device-id

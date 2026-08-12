@@ -247,7 +247,7 @@ be more familiar with, while keeping the rest intact.
 # Example 3: Device specific configuration
 
 Global config with a keyboard specific override that inherits
-all other bindings via `:include` (see the man page for details).
+all other bindings via `@include` (see the man page for details).
 
 `/etc/keyd/default.conf`:
 
@@ -264,7 +264,7 @@ all other bindings via `:include` (see the man page for details).
 
 `/etc/keyd/keychron.conf`:
 
-	:include default.conf
+	@include default.conf
 
 	[ids]
 	3434:3434
