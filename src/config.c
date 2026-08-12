@@ -187,7 +187,7 @@ static char *read_config_file(const char *path, struct srcmap *srcmap)
 	const char include_prefix[] = "include ";
 	const size_t include_prefix_len = sizeof(include_prefix) - 1;
 
-	const char inherit_prefix[] = ":include ";
+	const char inherit_prefix[] = "@include ";
 	const size_t inherit_prefix_len = sizeof(inherit_prefix) - 1;
 
 	size_t off = 0;
